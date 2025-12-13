@@ -44,10 +44,9 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
     env:
-      PBRP_VERSION: "4.0"
-      BUILD_DATE: ${{ format('{0:YYYYMMDD}', github.event.head_commit.timestamp) }}
+      PBRP_VERSION: "4.0"      
       OUTPUT_DIR: ${{ github.workspace }}/android-recovery/out/target/product/${{ inputs.DEVICE_NAME }}
-      CCACHE_MAXSIZE: "20G"
+      CCACHE_MAXSIZE: "5G"
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       contents: write
@@ -65,16 +64,6 @@ jobs:
 
       - name: 🧹 Cleanup & Maximize Resources
         uses: rokibhasansagar/slimhub_actions@main
-        with:
-          remove-dotnet: true
-          remove-android: true
-          remove-haskell: true
-          remove-codeql: true
-
-      - name: 🐏 Set Swap Space (24GB)
-        uses: pierotofy/set-swap-space@master
-        with:
-          swap-size-gb: 24
 
       - name: 🛠️ Setup Build Dependencies
         run: |

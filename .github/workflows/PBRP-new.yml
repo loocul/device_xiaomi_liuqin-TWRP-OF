@@ -51,12 +51,9 @@ on:
 jobs:
   build:
     name: Build PBRP for ${{ inputs.DEVICE_NAME }} by ${{ github.actor }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
     env:
-      DEBIAN_FRONTEND: noninteractive
-      BUILD_START: ${{ format('{0}', github.event.head_commit.timestamp) }}
-      BUILD_DATE: ${{ format('{0:YYYYMMDD}', github.event.head_commit.timestamp) }}
       DEVICE_NAME: ${{ inputs.DEVICE_NAME }}
       DEVICE_PATH: ${{ inputs.DEVICE_PATH }}
       OUTPUT_DIR: ${{ github.workspace }}/android-recovery/out/target/product/${{ inputs.DEVICE_NAME }}
@@ -84,11 +81,6 @@ jobs:
           remove-android: true
           remove-haskell: true
 
-      - name: 🐏 Set 24GB Swap Space
-        uses: pierotofy/set-swap-space@master
-        with:
-          swap-size-gb: 24
-
       - name: 🏗️ Build PitchBlack Recovery (via Official Action)
         uses: mlm-games/pitchblack-pbrp-builder-action@main
         id: build
@@ -100,7 +92,7 @@ jobs:
           DEVICE_NAME: ${{ inputs.DEVICE_NAME }}
           BUILD_TARGET: ${{ inputs.BUILD_TARGET }}
           CCACHE_ENABLE: true  # 启用ccache加速构建
-          CCACHE_SIZE: "20G"
+          CCACHE_SIZE: "5G"
 
       - name: 📊 Calculate MD5 Checksums
         run: |
