@@ -1,0 +1,212 @@
+name: TWRP 16 Builder
+on:
+  workflow_dispatch:
+    inputs:
+      TWRP_MANIFEST_URL:
+        description: "TWRP manifest url"
+        required: true
+        default: "https://github.com/ymdzq/manifest_twrp"
+      TWRP_MANIFEST_BRANCH:
+        description: "TWRP branch"
+        required: true
+        default: "twrp-16.0"
+      DEVICE_TREE_URL:
+        description: "Device tree url"
+        required: true
+        default: "https://github.com/xccxxcys/device_xiaomi_liuqin-TWRP-OF"
+      DEVICE_TREE_BRANCH:
+        description: "Device tree branch"
+        required: true
+        default: "main"
+      DEVICE_PATH:
+        description: "Device path"
+        required: true
+        default: "device/xiaomi/liuqin"
+      DEVICE_NAME:
+        description: "Device codename"
+        required: true
+        default: "liuqin"
+      BUILD_TARGET:
+        description: "Build target partition"
+        required: true
+        default: "recovery"
+        type: choice
+        options:
+          - boot
+          - recovery
+          - vendorboot
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      # 统一环境变量，避免重复引用
+      BUILD_DATE: ${{ format('{0:YYYY-MM-DD}', github.event.head_commit.timestamp) }}
+      REPO_NAME: ${{ github.event.repository.name }}
+      CCACHE_MAXSIZE: "20G"  # 加大缓存容量，适配大型项目
+      TWRP_VERSION: "3.7.1-16"  # 集中管理版本号，便于修改
+
+    steps:
+      - name: 📋 Show build info
+        run: |
+          echo "=== Build Configuration ==="
+          echo "Manifest: ${{ inputs.TWRP_MANIFEST_URL }} (${{ inputs.TWRP_MANIFEST_BRANCH }})"
+          echo "Device Tree: ${{ inputs.DEVICE_TREE_URL }} (${{ inputs.DEVICE_TREE_BRANCH }})"
+          echo "Device Path: ${{ inputs.DEVICE_PATH }}"
+          echo "Build Target: ${{ inputs.BUILD_TARGET }}"
+          echo "Build Date: $BUILD_DATE"
+          echo "=========================="
+
+      - name: 🧹 Cleanup & Maximize space
+        uses: rokibhasansagar/slimhub_actions@main
+        with:
+          remove-dotnet: true
+          remove-android: true
+          remove-haskell: true
+
+      - name: 🚀 Maximize build space (advanced)
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 5120
+          swap-size-mb: 10240  # 加大交换分区，避免内存不足
+
+      - name: 📦 Setup persistent ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          create-symlink: true
+          max-size: ${{ env.CCACHE_MAXSIZE }}
+          key: ${{ inputs.DEVICE_NAME }}-${{ inputs.BUILD_TARGET }}-ccache
+          restore-keys: |
+            ${{ inputs.DEVICE_NAME }}-${{ inputs.BUILD_TARGET }}-ccache
+            ${{ inputs.DEVICE_NAME }}-ccache
+
+      - name: 🐏 Optimize zram (memory boost)
+        run: |
+          set -e
+          sudo apt update && sudo apt install -y zram-tools linux-modules-extra-$(uname -r)
+          sudo modprobe zram
+          sudo sed -i 's/^#PERCENT=50/PERCENT=95/' /etc/default/zramswap
+          sudo sed -i 's/^#PRIORITY=100/PRIORITY=2000/' /etc/default/zramswap
+          sudo systemctl restart zramswap
+          zramctl | awk '{print "Zram Usage:", $1, $2, $3}'
+
+      - name: 🛠️ Setup build environment
+        run: |
+          set -e
+          export DEBIAN_FRONTEND=noninteractive
+          # 快速安装依赖（跳过推荐包，加快速度）
+          sudo apt update && sudo apt install -y --no-install-recommends \
+            repo git-core gnupg flex bison gperf build-essential zip curl zlib1g-dev \
+            gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev \
+            libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip ccache \
+            openjdk-17-jdk python3 python3-pip python3-dev
+          # 配置Git身份
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          # 验证依赖
+          repo --version || echo "Repo initialized"
+          java -version
+          gcc --version
+
+      - name: 📥 Sync source code (optimized)
+        run: |
+          set -e
+          # 初始化repo（浅克隆+单分支，大幅提速）
+          repo init -u ${{ inputs.TWRP_MANIFEST_URL }} -b ${{ inputs.TWRP_MANIFEST_BRANCH }} \
+            --depth=1 --single-branch --no-tags
+          # 并行同步（显示进度，失败重试）
+          repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+          echo "Source sync completed successfully"
+
+      - name: 📱 Clone device tree
+        run: |
+          set -e
+          # 创建设备路径（避免路径不存在报错）
+          mkdir -p $(dirname ${{ inputs.DEVICE_PATH }})
+          git clone ${{ inputs.DEVICE_TREE_URL }} -b ${{ inputs.DEVICE_TREE_BRANCH }} \
+            --depth=1 ${{ inputs.DEVICE_PATH }}
+          # 验证设备树
+          if [ ! -f "${{ inputs.DEVICE_PATH }}/Android.mk" ] && [ ! -f "${{ inputs.DEVICE_PATH }}/Android.bp" ]; then
+            echo "Error: Device tree missing Android.mk/Android.bp"
+            exit 1
+          fi
+
+      - name: 📝 Generate build info
+        run: |
+          set -e
+          BUILD_INFO="TWRP Build Info
+          =================
+          Version: $TWRP_VERSION
+          Device: ${{ inputs.DEVICE_NAME }}
+          Manifest Branch: ${{ inputs.TWRP_MANIFEST_BRANCH }}
+          Device Tree Branch: ${{ inputs.DEVICE_TREE_BRANCH }}
+          Build Target: ${{ inputs.BUILD_TARGET }}
+          Build Date: $BUILD_DATE
+          GitHub Run ID: ${{ github.run_id }}
+          "
+          echo -e "$BUILD_INFO" > INFO.txt
+          echo -e "\nChange Log:" >> INFO.txt
+          # 获取设备树提交日志（避免无标签时报错）
+          cd ${{ inputs.DEVICE_PATH }}
+          if git describe --tags --abbrev=0 >/dev/null 2>&1; then
+            LAST_TAG=$(git describe --tags --abbrev=0)
+            git log --pretty=format:"- %h (%an): %s" $LAST_TAG..HEAD >> ../../INFO.txt
+          else
+            git log --pretty=format:"- %h (%an): %s" -n 20 >> ../../INFO.txt  # 限制日志长度
+          fi
+          cat ../../INFO.txt
+
+      - name: 🏗️ Build TWRP (with ccache & logs)
+        run: |
+          set -e
+          # 初始化构建环境
+          source build/envsetup.sh
+          # 配置ccache
+          export ALLOW_MISSING_DEPENDENCIES=true
+          export CCACHE_DIR=$GITHUB_WORKSPACE/.ccache
+          export CCACHE_EXEC=$(command -v ccache)
+          export USE_CCACHE=1
+          # 预热ccache（加快编译）
+          ccache -s
+          # 开始构建（lunch参数自动适配设备路径）
+          lunch $(basename ${{ inputs.DEVICE_PATH }})-eng
+          make clean
+          # 并行编译（显示详细日志，输出到文件）
+          make ${{ inputs.BUILD_TARGET }}image -j$(nproc --all) 2>&1 | tee build.log
+          # 验证输出文件
+          OUTPUT_FILE="out/target/product/${{ inputs.DEVICE_NAME }}/${{ inputs.BUILD_TARGET }}.img"
+          if [ ! -f "$OUTPUT_FILE" ]; then
+            echo "Error: Build failed - Output file not found"
+            exit 1
+          fi
+          # 重命名输出文件（包含完整信息）
+          mv "$OUTPUT_FILE" "out/target/product/${{ inputs.DEVICE_NAME }}/TWRP-${TWRP_VERSION}-${{ inputs.DEVICE_NAME }}-${BUILD_DATE}.img"
+          echo "Build completed successfully!"
+          ccache -s  # 显示ccache使用情况
+
+      - name: 📤 Upload build artifacts
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            out/target/product/${{ inputs.DEVICE_NAME }}/TWRP-${{ env.TWRP_VERSION }}-${{ inputs.DEVICE_NAME }}-${{ env.BUILD_DATE }}.img
+            build.log
+            INFO.txt
+          name: TWRP-${{ env.TWRP_VERSION }}-${{ inputs.DEVICE_NAME }}-${{ env.BUILD_DATE }}
+          tag_name: ${{ env.BUILD_DATE }}-${{ inputs.DEVICE_NAME }}-${{ github.run_id }}
+          body_path: INFO.txt
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🚨 Upload failed logs (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-failure-logs-${{ github.run_id }}
+          path: |
+            build.log
+            out/build-error.log
+          retention-days: 7  # 日志保留7天
