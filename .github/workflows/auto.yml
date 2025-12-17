@@ -13,23 +13,23 @@ on:
       DEVICE_TREE:
         description: '📱 Device Tree URL'
         required: true
-        default: 'https://github.com/xccxxcys/device_xiaomi_liuqin-TWRP-OF'
+        default: 'https://github.com/xccxxcys/OrangeFox-Recovery-Builder-2024'
       DEVICE_TREE_BRANCH:
         description: '🌱 Device Tree Branch'
         required: true
-        default: 'main'
+        default: 'OrangeFox'
       DEVICE_PATH:
         description: '📂 Specify your Device Path'
         required: true
-        default: 'device/xiaomi/liuqin'
+        default: 'device/oplus/sm86xx'
       DEVICE_NAME:
         description: '🖥️ Specify your Device Codename'
         required: true
-        default: 'liuqin'
+        default: 'sm86xx'
       LUNCH_TARGET:
         description: "🍽️ lunch twrp_ (default same as device name)"
         required: false
-        default: 'liuqin'
+        default: 'sm86xx'
       BUILD_PARTITION:
         description: '🎯 Specify your Build Target'
         required: true
@@ -42,17 +42,22 @@ on:
       MAGISK_VERSION:
         description: '🔧 Specify your Magisk Version'
         required: true
-        default: 'MagiskAlpha'#我喜欢这个magisk版本
+        default: 'MagiskAlpha'
         type: choice
         options:
           - Magisk
           - MagiskAlpha
           - MagiskDelta
-      USE_CCACHE:
-        description: '⚡ Use ccache for compilation'
+      USE_PATCHES:
+        description: '🧩 Apply wifi patches'
         type: boolean
         required: true
-        default: true
+        default: false
+      USE_SKKK_PATCHES:
+        description: '🧩 Apply skkk 12.1 patches'
+        type: boolean
+        required: true
+        default: false
 
 jobs:
   build:
@@ -73,13 +78,15 @@ jobs:
           {
             echo 'BUILD_INFO<<EOF'
             echo
-            echo "📱 Device tree url: ${{ github.event.inputs.DEVICE_TREE }}"  # 修复：参数名统一（原DEVICE_TREE_URL→DEVICE_TREE，与输入参数一致）
+            echo "📱 Device tree url: ${{ github.event.inputs.DEVICE_TREE }}"
             echo "🌿 Device tree branch: ${{ github.event.inputs.DEVICE_TREE_BRANCH }}"
             echo "📂 Device path: ${{ github.event.inputs.DEVICE_PATH }}"
             echo "🖥️ Device name: ${{ github.event.inputs.DEVICE_NAME }}"
             echo "🍽️ Lunch target: ${{ env.LUNCH_TARGET }}"
             echo "🎯 Build target: ${{ github.event.inputs.BUILD_PARTITION }}.img"
             echo "📅 Build date: $(date)"
+            echo "🧩 Apply wifi patches: ${{ github.event.inputs.USE_PATCHES }}"
+            echo "🧩 Apply skkk patches: ${{ github.event.inputs.USE_SKKK_PATCHES }}"
             echo
             echo EOF
           } >> "$GITHUB_ENV"
@@ -116,8 +123,8 @@ jobs:
       - name: 📥 Pull TWRP Source
         run: |
           if [ "${{ inputs.MANIFEST_BRANCH }}" = "14.1" ]; then
-            TWRP_REPO="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git"
-            TWRP_BRANCH="twrp-14.1"
+            TWRP_REPO="https://github.com/nebrassy/platform_manifest_twrp_aosp.git"
+            TWRP_BRANCH="twrp-14"
             repo init -u $TWRP_REPO -b $TWRP_BRANCH --depth=1
             repo sync
           fi
@@ -139,8 +146,8 @@ jobs:
             ./orangefox_sync.sh --branch ${{ github.event.inputs.MANIFEST_BRANCH }} --path $WORKINGDIR
           fi
                     
-      - name: 🧩 Patch 12.1 Branch
-        if: inputs.MANIFEST_BRANCH == '12.1'
+      - name: 🧩 Apply skkk 12.1 patches
+        if: ${{ github.event.inputs.USE_SKKK_PATCHES == true && inputs.MANIFEST_BRANCH == '12.1' }}
         run: |
           WORKINGDIR=$(pwd)
           # 修改twrp-default.xml中的项目配置
@@ -152,17 +159,28 @@ jobs:
           mv $WORKINGDIR/bootable/recovery-ofrp $WORKINGDIR/bootable/recovery
           # 拉取并应用OrangeFox补丁（添加容错处理）
           cd $WORKINGDIR/bootable/recovery
-          git fetch https://github.com/ymdzq/OrangeFox_Recovery fox_12.1 && git cherry-pick 36289fac..05b3e1b9 || echo "⚠️ 12.1分支补丁应用失败/无新补丁，继续构建"
+          git fetch https://github.com/ymdzq/OrangeFox_Recovery fox_12.1 && git cherry-pick 36289fac..05b3e1b9 || echo "⚠️ 12.1分支skkk补丁应用失败/无新补丁，继续构建"
           cd $WORKINGDIR
 
-      # - name: 🧩 Patch 14.1 Branch
-      #   if: inputs.MANIFEST_BRANCH == '14.1'
+      # - name: 🧩 Apply skkk 12.1 patches
+      #   if: ${{ github.event.inputs.USE_PATCHES == true && inputs.MANIFEST_BRANCH == '14.1' }}
       #   run: |
       #      WORKINGDIR=$(pwd)
       #      cd $WORKINGDIR/bootable/recovery
-      #      git fetch https://github.com/ymdzq/OrangeFox_Recovery fox_12.1 && git cherry-pick 36289fac..05b3e1b9 || echo "⚠️ 14.1分支补丁应用失败/无新补丁，继续构建"
+      #      git fetch https://github.com/ymdzq/OrangeFox_Recovery fox_12.1 && git cherry-pick 36289fac..05b3e1b9 || echo "⚠️ 14.1分支skkk补丁应用失败/无新补丁，继续构建"
       #      cd $WORKINGDIR
       #不要启用，会冲突
+      
+      - name: 🧩 🧩 Apply wifi 14.1 patches
+        if: ${{ github.event.inputs.USE_PATCHES == true && inputs.MANIFEST_BRANCH == '14.1' }}
+        run: |
+          WORKINGDIR=$(pwd)
+          cd $WORKINGDIR/bootable/recovery
+          git apply $WORKINGDIR/${{ github.event.inputs.DEVICE_PATH }}/patches/*.patch || echo "⚠️ 14.1分支wifi补丁应用失败，继续构建"
+          cd $WORKINGDIR
+          git clone https://github.com/adontoo/android_external_libmicrohttpd -b ofox-14.1 external/libmicrohttpd
+          rm -rf bionic
+          git clone https://github.com/adontoo/OrangeFox-android_platform_bionic bionic
          
       - name: 📱 Setup device
         run: |
@@ -217,13 +235,13 @@ jobs:
         run: |
           set +e
           export MAKEFLAGS="-j$(nproc)"
-          if [[ ${{ inputs.USE_CCACHE }} == true ]]; then
-            export CCACHE_DIR=.ccache
-            export CCACHE_EXEC=$(command -v ccache)
-            export CCACHE_MAXSIZE=5G
-            export USE_CCACHE=1
-            sed -i 's/return sandboxConfig\.working/return false/g' build/soong/ui/build/sandbox_linux.go
-          fi
+          # 默认启用CCACHE，移除判断逻辑
+          export CCACHE_DIR=.ccache
+          export CCACHE_EXEC=$(command -v ccache)
+          export CCACHE_MAXSIZE=5G
+          export USE_CCACHE=1
+          sed -i 's/return sandboxConfig\.working/return false/g' build/soong/ui/build/sandbox_linux.go
+          
           source build/envsetup.sh
           export ALLOW_MISSING_DEPENDENCIES=true
           set -e
@@ -247,7 +265,8 @@ jobs:
             📱 Device: [Device Tree/Branch](${{ env.DEVICE_TREE_URL }}/tree/${{ inputs.DEVICE_TREE_BRANCH }})
             ✅ Trigger Commit: [${{ github.sha }}](${{ env.DEVICE_TREE_URL }}/commit/${{ github.sha }})
             🔧 Magisk Version: ${{ inputs.MAGISK_VERSION }}
-            
+            🧩 Apply wifi 14.1 patches: ${{ github.event.inputs.USE_PATCHES }}
+            🧩 Apply skkk 12.1 patches: ${{ github.event.inputs.USE_SKKK_PATCHES }}
             ### ⚠️ Warning
             - For ${{ inputs.DEVICE_NAME }} only!
           body_path: ${{ github.event.inputs.DEVICE_PATH }}/INFO.txt
