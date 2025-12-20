@@ -97,7 +97,7 @@ jobs:
           set -e
           # 初始化repo（浅克隆+单分支，大幅提速）
           repo init -u ${{ inputs.TWRP_MANIFEST_URL }} -b ${{ inputs.TWRP_MANIFEST_BRANCH }} \ --depth=1
-          repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+          repo sync
           echo "Source sync completed successfully"
 
       - name: 📱 Clone device tree
@@ -148,7 +148,7 @@ jobs:
           lunch $(basename ${{ inputs.DEVICE_PATH }})-eng
           make clean
           # 并行编译（显示详细日志，输出到文件）
-          make ${{ inputs.BUILD_TARGET }}image -j$(nproc --all) 2>&1 | tee build.log
+          make adbd ${{ inputs.BUILD_TARGET }}image -j$(nproc --all)
           # 验证输出文件
           OUTPUT_FILE="out/target/product/${{ inputs.DEVICE_NAME }}/${{ inputs.BUILD_TARGET }}.img"
           if [ ! -f "$OUTPUT_FILE" ]; then
