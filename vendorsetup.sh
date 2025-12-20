@@ -16,13 +16,14 @@ export OF_USE_LZ4_COMPRESSION=1  # 使用LZ4压缩算法
 #export FOX_VANILLA_BUILD=1  # 纯净版构建（不含额外预装组件）
 export OF_NO_MIUI_PATCH_WARNING=1  # 禁用MIUI补丁警告
 #export OF_DISABLE_MIUI_OTA_BY_DEFAULT=1  # 默认禁用MIUI OTA功能
+#export OF_FORCE_USE_RECOVERY_FSTAB=1 # 跳过新版fstab处理
  
 #设备相关配置（合并兼容设备列表，补充核心参数）
  
 export TARGET_DEVICE_ALT="liuqin"  # 合并原有+新增兼容设备
 export FOX_VIRTUAL_AB_DEVICE=1  # 标记为虚拟A/B设备
 export OF_DYNAMIC_FULL_SIZE=9126805504  # 动态分区总大小（适配VAB设备）
-#export FOX_VARIANT="OPLUS_PINEAPPLE"  # 设备变体（一加菠萝系列专属）
+#export FOX_VARIANT=""  # 当你想标出这是一个特殊的版本时使用
 #export OF_FORCE_PREBUILT_KERNEL=1  # 强制使用预编译内核
 export OF_UNBIND_SDCARD_F2FS=1  # 格式化F2FS时解绑SD卡
 export OF_WIPE_METADATA_AFTER_DATAFORMAT=1  # 格式化数据后清除metadata分区
@@ -32,6 +33,7 @@ export OF_FORCE_DATA_FORMAT_F2FS=1  # 强制将数据分区格式化为F2FS
  
 export FOX_RECOVERY_SYSTEM_PARTITION="/dev/block/mapper/system"  # 系统分区路径
 export FOX_RECOVERY_VENDOR_PARTITION="/dev/block/mapper/vendor"  #  vendor分区路径
+# export FOX_RECOVERY_BOOT_PARTITION="/dev/block/bootdevice/by-name/boot"
  
 #功能开关配置（保留原有+新增核心功能）
  
@@ -71,6 +73,7 @@ export FOX_RESET_SETTINGS=disabled  # 安装后不恢复默认设置
 export OF_IGNORE_LOGICAL_MOUNT_ERRORS=1  # 逻辑分区挂载错误仅日志显示
 export FOX_USE_UPDATED_MAGISKBOOT=1  # 使用新版magiskboot工具
 export OF_SUPPORT_VBMETA_AVB2_PATCHING=1  # 支持修补vbmeta禁用avb2.0
+# export FOX_DISABLE_UPDATEZIP=1 # 不生成recovery的zip刷机包
  
 #数据解密核心配置
  
@@ -93,6 +96,7 @@ export OF_ALLOW_DISABLE_NAVBAR=0  # 禁止禁用导航栏
 export OF_DEFAULT_TIMEZONE="TAIST-8;TAIDT"  # 设置默认时区为北京时间
 export OF_OPTIONS_LIST_NUM=6  # 安装选项列表最大数量（6个，超出显示滚动条）
 export OF_DEFAULT_KEYMASTER_VERSION=4.0  # 指定默认keymaster版本
+export OF_USE_LZMA_COMPRESSION=1 #ramdisk启动LZMA压缩
  
 #刷机属性调整（新增适配功能）
  
