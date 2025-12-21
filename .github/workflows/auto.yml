@@ -140,7 +140,7 @@ jobs:
         run: |
           WORKINGDIR=$(pwd)
           if [ "${{ inputs.MANIFEST_BRANCH }}" = "14.1" ]; then
-            TWRP_REPO="https://github.com/nebrassy/platform_manifest_twrp_aosp.git"
+            TWRP_REPO="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git"
             TWRP_BRANCH="twrp-14"
             repo init -u $TWRP_REPO -b $TWRP_BRANCH --depth=1
             repo sync
@@ -248,12 +248,7 @@ jobs:
           export CCACHE_MAXSIZE=5G
           export USE_CCACHE=1
           export ALLOW_MISSING_DEPENDENCIES=true
-          export BOARD_VINTF_DISABLE_REQUIRE=true
           export SKIP_VINTF_CHECK=true
-          export DISABLE_VINTF=true
-          export BOARD_VINTF_MERGE=false
-          # 欺骗 extract_kernel.py，创建空内核的符号链接
-          ln -sf $(DEVICE_PATH)/prebuilt/$(PRODUCT_RELEASE_NAME)/kernel $(OUT_DIR)/kernel
           ccache -s
           source build/envsetup.sh
           set -e
