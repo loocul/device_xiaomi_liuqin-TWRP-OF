@@ -139,10 +139,8 @@ jobs:
       - name: 📥 Pull TWRP Source & Run OrangeFox Sync
         run: |
           WORKINGDIR=$(pwd)
-          if [ "${{ inputs.MANIFEST_BRANCH }}" = "14.1" ]; then
-            TWRP_REPO="https://github.com/nebrassy/platform_manifest_twrp_aosp.git"
-            TWRP_BRANCH="twrp-14"
-            repo init -u $TWRP_REPO -b $TWRP_BRANCH --depth=1
+          if [ "${{ inputs.MANIFEST_BRANCH }}" = "14.1" ]; then        
+            repo init --depth=1 -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-14.1
             repo sync 
             git clone https://gitlab.com/OrangeFox/sync.git -b master
             chmod +x sync/orangefox_sync.sh
@@ -167,7 +165,7 @@ jobs:
           repo sync
           mv $WORKINGDIR/bootable/recovery-ofrp $WORKINGDIR/bootable/recovery
           cd $WORKINGDIR/bootable/recovery
-          git fetch https://github.com/ymdzq/OrangeFox_Recovery fox_12.1 && git cherry-pick 36289fac..05b3e1b9 || echo "⚠️ 12.1分支ymdzq补丁应用失败/无新补丁，继续构建"
+          git fetch https://github.com/ymdzq/OrangeFox_Recovery fox_12.1 && git cherry-pick 36289fac..05b3e1b9 || echo "⚠️ 12.1分支ymdzq补丁应用失败/无新补丁，继续构建"      
           cd $WORKINGDIR
 
       - name: 🧩 Apply wifi 14.1 patches
@@ -176,6 +174,7 @@ jobs:
           WORKINGDIR=$(pwd)
           cd $WORKINGDIR/bootable/recovery
           git apply $WORKINGDIR/${{ inputs.DEVICE_PATH }}/patches/*.patch || echo "⚠️ 14.1分支wifi补丁应用失败，继续构建"
+          git fetch https://github.com/ymdzq/OrangeFox_Recovery fox_12.1 && git cherry-pick 1ccd5e37ce1a8ddd4982ff79d8f95d4cc05c6c6f
           cd $WORKINGDIR
           git clone https://github.com/adontoo/android_external_libmicrohttpd -b ofox-14.1 external/libmicrohttpd
           rm -rf bionic
