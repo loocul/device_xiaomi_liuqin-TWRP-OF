@@ -38,6 +38,7 @@ PRODUCT_EXTRA_RECOVERY_KEYS += \
     $(LOCAL_PATH)/security/miui_releasekey
 
 # PRODUCT_RELEASE_NAME ro.twrp.device.name
+PRODUCT_RELEASE_NAME := liuqin
 PRODUCT_PROPERTY_OVERRIDES += ro.twrp.device.name=$(PRODUCT_RELEASE_NAME)
 
 ifneq ($(TW_SKKK_VER_CODE),)

@@ -6,6 +6,7 @@
 #
 
 DEVICE_PATH := device/xiaomi/liuqin
+PRODUCT_RELEASE_NAME := liuqin
 
 # For building with minimal manifest
 ALLOW_MISSING_DEPENDENCIES := true
