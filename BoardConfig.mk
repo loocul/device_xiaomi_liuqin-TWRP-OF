@@ -41,17 +41,15 @@ TARGET_BOARD_PLATFORM := taro
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno730
 QCOM_BOARD_PLATFORMS += taro
 
+# 备份时忽略ksu,apatch文件夹,避免错误
+TW_BACKUP_EXCLUSIONS := /data/adb/ap,/data/adb/ksu
+
 # Kernel
 BOARD_KERNEL_IMAGE_NAME := Image
 BOARD_BOOT_HEADER_VERSION := 4
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 BOARD_KERNEL_PAGESIZE := 4096
-
-# Kernel - prebuilt
-TARGET_FORCE_PREBUILT_KERNEL := true  # 关闭强制预编译内核
-ifeq ($(TARGET_FORCE_PREBUILT_KERNEL),true)
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/$(PRODUCT_RELEASE_NAME)/kernel
-endif
+BOARD_MKBOOTIMG_ARGS        += --pagesize $(BOARD_KERNEL_PAGESIZE)
 
 # Ramdisk use lz4
 BOARD_RAMDISK_USE_LZ4 := true

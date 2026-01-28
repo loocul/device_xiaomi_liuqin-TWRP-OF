@@ -10,6 +10,7 @@ ro.charger.enable_suspend=1
 
 # Reset allocatable space
 ro.dynamic.full_size=9126805504
+
 # Crypto
 ro.hardware.keystore_desede=true
 ro.crypto.metadata_init_delete_all_keys.enabled=true

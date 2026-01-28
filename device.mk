@@ -4,6 +4,21 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
+# Inherit from the common Open Source product configuration
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
+
+#Enable virtual A/B OTA
+$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
+
+# Configure virtual_ab compression.mk
+$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/compression.mk)
+
+# Enable Project Quotas and Case Folding
+$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
+
+# Inherit some common twrp stuff.
+$(call inherit-product, vendor/twrp/config/common.mk)
 
 # some OrangeFox-specific settings
 $(call inherit-product, $(LOCAL_PATH)/fox_liuqin.mk)
@@ -20,6 +35,9 @@ TW_INCLUDE_FASTBOOTD := true
 BOARD_SHIPPING_API_LEVEL    := 34
 PRODUCT_TARGET_VNDK_VERSION := 34
 PRODUCT_SHIPPING_API_LEVEL := 34
+
+# Kernel
+PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS   := false
 
 # A/B
 ENABLE_VIRTUAL_AB := true
