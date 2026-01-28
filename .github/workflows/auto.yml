@@ -13,7 +13,7 @@ on:
       DEVICE_TREE:
         description: '📱 Device Tree URL'
         required: true
-        default: 'https://github.com/xccxxcys/device_xiaomi_liuqin-TWRP-OF'
+        default: 'https://github.com/loocul/device_xiaomi_liuqin-TWRP-OF'
       DEVICE_TREE_BRANCH:
         description: '🌱 Device Tree Branch'
         required: true
@@ -192,12 +192,14 @@ jobs:
           DEVICE_TREE_URL="${{ inputs.DEVICE_TREE }}"
           [[ "${DEVICE_TREE_URL}" == *.git ]] && DEVICE_TREE_URL="${DEVICE_TREE_URL%.git}"
           echo "DEVICE_TREE_URL=${DEVICE_TREE_URL}" >> $GITHUB_ENV
-
+          
       - name: 🔧 Auto set API Level in device.mk
         run: |
           WORKINGDIR=$(pwd)
           TARGET_API_LEVEL="${{ inputs.TARGET_API_LEVEL }}"
           DEVICE_MK_PATH="$WORKINGDIR/${{ inputs.DEVICE_PATH }}/device.mk"
+          mkdir -p out/target/product/liuqin/
+          cp device/xiaomi/liuqin/prebuilt/liuqin/kernel out/target/product/liuqin/kernel
           if ! grep -q '^BOARD_SHIPPING_API_LEVEL' "$DEVICE_MK_PATH"; then
             echo "BOARD_SHIPPING_API_LEVEL := $TARGET_API_LEVEL" >> "$DEVICE_MK_PATH" && echo "✅ Added BOARD_SHIPPING_API_LEVEL=$TARGET_API_LEVEL in $DEVICE_MK_PATH"
           else
