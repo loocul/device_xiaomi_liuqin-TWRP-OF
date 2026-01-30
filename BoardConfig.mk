@@ -15,10 +15,6 @@ BUILD_BROKEN_DUP_RULES                          := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES    := true
 BUILD_BROKEN_NINJA_USES_ENV_VARS    += RTIC_MPGEN
 BUILD_BROKEN_PLUGIN_VALIDATION      := soong-libaosprecovery_defaults soong-libguitwrp_defaults soong-libminuitwrp_defaults soong-vold_defaults
-BUILD_RECOVERY_IMAGE := true
-TARGET_NO_RECOVERY := false
-BOARD_HAS_RECOVERY_PARTITION := true
-BOARD_USES_RECOVERY_AS_BOOT := false
 
 # Architecture
 TARGET_ARCH := arm64
@@ -181,3 +177,9 @@ TW_STATUS_ICONS_ALIGN := center
 
 # Serialno
 TW_USE_SERIALNO_PROPERTY_FOR_DEVICE_ID := true
+
+# I'M BUILDING A RECOVERY
+TARGET_NO_RECOVERY := false
+BOARD_USES_RECOVERY_AS_BOOT := false
+BOARD_HAS_RECOVERY_PARTITION := true
+BUILD_RECOVERY_IMAGE := true
