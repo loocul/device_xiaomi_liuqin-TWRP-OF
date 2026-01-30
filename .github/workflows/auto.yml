@@ -198,8 +198,6 @@ jobs:
           WORKINGDIR=$(pwd)
           TARGET_API_LEVEL="${{ inputs.TARGET_API_LEVEL }}"
           DEVICE_MK_PATH="$WORKINGDIR/${{ inputs.DEVICE_PATH }}/device.mk"
-          mkdir -p out/target/product/liuqin/
-          cp device/xiaomi/liuqin/prebuilt/liuqin/kernel out/target/product/liuqin/kernel
           if ! grep -q '^BOARD_SHIPPING_API_LEVEL' "$DEVICE_MK_PATH"; then
             echo "BOARD_SHIPPING_API_LEVEL := $TARGET_API_LEVEL" >> "$DEVICE_MK_PATH" && echo "✅ Added BOARD_SHIPPING_API_LEVEL=$TARGET_API_LEVEL in $DEVICE_MK_PATH"
           else
