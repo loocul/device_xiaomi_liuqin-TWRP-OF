@@ -10,7 +10,8 @@ PRODUCT_RELEASE_NAME := liuqin
 
 # For building with minimal manifest
 ALLOW_MISSING_DEPENDENCIES := true
-
+TARGET_STRIP_ALL := true
+TARGET_NO_KERNEL := true
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
@@ -52,11 +53,8 @@ BOARD_KERNEL_PAGESIZE := 4096
 BOARD_MKBOOTIMG_ARGS        += --pagesize $(BOARD_KERNEL_PAGESIZE)
 
 # Kernel - prebuilt
-TARGET_FORCE_PREBUILT_KERNEL := true
-TARGET_PREBUILT_KERNEL := device/xiaomi/liuqin/prebuilt/liuqin/kernel
-
-# Ramdisk use lz4
-BOARD_RAMDISK_USE_LZ4 := true
+#TARGET_FORCE_PREBUILT_KERNEL := true
+#TARGET_PREBUILT_KERNEL := device/xiaomi/liuqin/prebuilt/liuqin/kernel
 
 # A/B
 # BOARD_USES_RECOVERY_AS_BOOT := true
@@ -132,6 +130,8 @@ TW_INCLUDE_RESETPROP := true
 TW_INCLUDE_LIBRESETPROP := true
 TW_INCLUDE_LPDUMP := true
 TW_INCLUDE_LPTOOLS := true
+TW_ENABLE_ALL_PARTITION_TOOLS := true
+TW_INCLUDE_7ZA                := true
 
 # TWRP Configuration
 TW_THEME := portrait_hdpi

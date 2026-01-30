@@ -7,22 +7,8 @@
 
 # Release name
 PRODUCT_RELEASE_NAME := liuqin
-
-# 引用默认的编译配置文件，core_64_bit必须先于其他引用，否则不生效
-$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
-
-# Enable virtual A/B OTA
-$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
-
-# Configure emulated_storage.mk
-$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
-
-# Inherit from liuqin device
-$(call inherit-product, device/xiaomi/liuqin/device.mk)
-
-# Inherit some common TWRP stuff.
-$(call inherit-product, vendor/twrp/config/common.mk)
+# Inherit from device.mk configuration
+$(call inherit-product, $(DEVICE_PATH)/device.mk)
 
 # Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := liuqin

@@ -1,9 +1,9 @@
 <!--
     Input:
         system/libhidl/vintfdata/manifest.xml
-        device/xiaomi/missi/framework_manifest.xml
+        device/qcom/qssi/framework_manifest.xml
 -->
-<manifest version="4.0" type="framework">
+<manifest version="9.0" type="framework">
     <hal format="hidl" max-level="6">
         <name>android.frameworks.displayservice</name>
         <transport>hwbinder</transport>
@@ -18,22 +18,12 @@
         <name>android.frameworks.sensorservice</name>
         <fqname>ISensorManager/default</fqname>
     </hal>
-    <hal format="hidl">
+    <hal format="hidl" max-level="8">
         <name>android.frameworks.sensorservice</name>
         <transport>hwbinder</transport>
         <fqname>@1.0::ISensorManager/default</fqname>
     </hal>
-    <hal format="hidl">
-        <name>android.hidl.manager</name>
-        <transport>hwbinder</transport>
-        <version>1.2</version>
-        <interface>
-            <name>IServiceManager</name>
-            <instance>default</instance>
-        </interface>
-        <fqname>@1.2::IServiceManager/default</fqname>
-    </hal>
-    <hal format="hidl">
+    <hal format="hidl" max-level="8">
         <name>android.hidl.memory</name>
         <transport arch="32+64">passthrough</transport>
         <fqname>@1.0::IMapper/ashmem</fqname>
@@ -62,7 +52,7 @@
         <transport>hwbinder</transport>
         <fqname>@1.0::IAtCmdFwd/AtCmdFwdService</fqname>
     </hal>
-    <hal format="hidl">
+    <hal format="hidl" max-level="8">
         <name>vendor.qti.hardware.systemhelper</name>
         <transport>hwbinder</transport>
         <fqname>@1.0::ISystemEvent/default</fqname>
@@ -75,5 +65,7 @@
         <version>32</version>
         <version>33</version>
         <version>34</version>
+        <version>35</version>
+        <version>36</version>
     </system-sdk>
 </manifest>
