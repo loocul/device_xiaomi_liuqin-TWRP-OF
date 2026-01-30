@@ -7,8 +7,6 @@
 
 # Release name
 PRODUCT_RELEASE_NAME := liuqin
-DEVICE_PATH := device/xiaomi/liuqin
-
 # Inherit from device.mk configuration
 $(call inherit-product, $(DEVICE_PATH)/device.mk)
 
