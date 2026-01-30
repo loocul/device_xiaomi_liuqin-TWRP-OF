@@ -11,7 +11,11 @@ PRODUCT_RELEASE_NAME := liuqin
 # For building with minimal manifest
 ALLOW_MISSING_DEPENDENCIES := true
 TARGET_STRIP_ALL := true
-TARGET_NO_KERNEL := true
+BUILD_BROKEN_DUP_RULES                          := true
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES    := true
+BUILD_BROKEN_NINJA_USES_ENV_VARS    += RTIC_MPGEN
+BUILD_BROKEN_PLUGIN_VALIDATION      := soong-libaosprecovery_defaults soong-libguitwrp_defaults soong-libminuitwrp_defaults soong-vold_defaults
+
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
@@ -46,7 +50,7 @@ QCOM_BOARD_PLATFORMS += taro
 TW_BACKUP_EXCLUSIONS := /data/adb/ap,/data/adb/ksu
 
 # Kernel
-TARGET_NO_KERNEL := false
+TARGET_NO_KERNEL := true
 BOARD_BOOT_HEADER_VERSION := 4
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 BOARD_KERNEL_PAGESIZE := 4096
@@ -107,13 +111,16 @@ BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 TARGET_COPY_OUT_VENDOR := vendor
+TW_USE_DMCTL               := true
 
 #Init
 TARGET_INIT_VENDOR_LIB := //$(DEVICE_PATH):libinit_liuqin
 TARGET_RECOVERY_DEVICE_MODULES := libinit_liuqin
 
 # Recovery
-TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
+BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE    := true
+TARGET_RECOVERY_PIXEL_FORMAT                := RGBX_8888
+TW_INCLUDE_FASTBOOTD                        := true
 
 # Crypto
 TW_INCLUDE_CRYPTO := true
