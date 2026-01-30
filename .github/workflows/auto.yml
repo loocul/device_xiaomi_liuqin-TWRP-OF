@@ -198,15 +198,21 @@ jobs:
           WORKINGDIR=$(pwd)
           TARGET_API_LEVEL="${{ inputs.TARGET_API_LEVEL }}"
           DEVICE_MK_PATH="$WORKINGDIR/${{ inputs.DEVICE_PATH }}/device.mk"
-          if ! grep -q '^BOARD_SHIPPING_API_LEVEL' "$DEVICE_MK_PATH"; then
-            echo "BOARD_SHIPPING_API_LEVEL := $TARGET_API_LEVEL" >> "$DEVICE_MK_PATH" && echo "✅ Added BOARD_SHIPPING_API_LEVEL=$TARGET_API_LEVEL in $DEVICE_MK_PATH"
+          BOARD_CONFIG_PATH="$WORKINGDIR/${{ inputs.DEVICE_PATH }}/BoardConfig.mk"
+          if ! grep -q '^BOARD_SHIPPING_API_LEVEL' "$BOARD_CONFIG_PATH"; then
+            echo "BOARD_SHIPPING_API_LEVEL := $TARGET_API_LEVEL" >> "$BOARD_CONFIG_PATH" && echo "✅ Added BOARD_SHIPPING_API_LEVEL=$TARGET_API_LEVEL in $DEVICE_MK_PATH"
           else
-            sed -i "s/^BOARD_SHIPPING_API_LEVEL\s*:=.*/BOARD_SHIPPING_API_LEVEL := $TARGET_API_LEVEL/" "$DEVICE_MK_PATH" && echo "✅ Updated BOARD_SHIPPING_API_LEVEL to $TARGET_API_LEVEL in $DEVICE_MK_PATH"
+            sed -i "s/^BOARD_SHIPPING_API_LEVEL\s*:=.*/BOARD_SHIPPING_API_LEVEL := $TARGET_API_LEVEL/" "$BOARD_CONFIG_PATH" && echo "✅ Updated BOARD_SHIPPING_API_LEVEL to $TARGET_API_LEVEL in $BOARD_CONFIG_PATH"
           fi
           if ! grep -q '^PRODUCT_SHIPPING_API_LEVEL' "$DEVICE_MK_PATH"; then
             echo "PRODUCT_SHIPPING_API_LEVEL := $TARGET_API_LEVEL" >> "$DEVICE_MK_PATH" && echo "✅ Added PRODUCT_SHIPPING_API_LEVEL=$TARGET_API_LEVEL in $DEVICE_MK_PATH"
           else
             sed -i "s/^PRODUCT_SHIPPING_API_LEVEL\s*:=.*/PRODUCT_SHIPPING_API_LEVEL := $TARGET_API_LEVEL/" "$DEVICE_MK_PATH" && echo "✅ Updated PRODUCT_SHIPPING_API_LEVEL to $TARGET_API_LEVEL in $DEVICE_MK_PATH"
+          fi
+          if ! grep -q '^PRODUCT_TARGET_VNDK_VERSION' "$DEVICE_MK_PATH"; then
+            echo "PRODUCT_TARGET_VNDK_VERSION := $TARGET_API_LEVEL" >> "$DEVICE_MK_PATH" && echo "✅ Added PRODUCT_TARGET_VNDK_VERSION=$TARGET_API_LEVEL in $DEVICE_MK_PATH"
+          else
+            sed -i "s/^PRODUCT_TARGET_VNDK_VERSION\s*:=.*/PRODUCT_TARGET_VNDK_VERSION := $TARGET_API_LEVEL/" "$DEVICE_MK_PATH" && echo "✅ Updated PRODUCT_TARGET_VNDK_VERSION to $TARGET_API_LEVEL in $DEVICE_MK_PATH"
           fi
 
       - name: 🔧 Clone OrangeFox Built-in Magisk
