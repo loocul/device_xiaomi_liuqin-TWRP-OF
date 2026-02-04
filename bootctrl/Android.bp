@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 cc_library {
     name: "bootctrl.taro",
     defaults: ["bootctrl_hal_defaults"],

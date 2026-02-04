@@ -6,6 +6,7 @@
 #
 
 LOCAL_PATH := $(call my-dir)
+LOCAL_STRIP_MODULE := true
 
 ifneq ($(filter liuqin,$(TARGET_DEVICE)),)
 include $(call all-makefiles-under,$(LOCAL_PATH))
