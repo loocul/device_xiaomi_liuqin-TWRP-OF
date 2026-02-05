@@ -12,7 +12,7 @@ export LC_ALL="C"  # 统一字符编码，避免中文乱码
 export ALLOW_MISSING_DEPENDENCIES=true  # 允许缺失非核心依赖（兼容部分库缺失场景）
 export FOX_AB_DEVICE=1  # 标记为A/B分区设备
 export OF_AB_DEVICE_WITH_RECOVERY_PARTITION=1  # A/B设备且存在独立recovery分区
-export OF_USE_LZ4_COMPRESSION=1  # 使用LZ4压缩算法
+export OF_USE_LZ4_COMPRESSION=0  # 使用LZ4压缩算法
 #export FOX_VANILLA_BUILD=1  # 纯净版构建（不含额外预装组件）
 export OF_NO_MIUI_PATCH_WARNING=1  # 禁用MIUI补丁警告
 #export OF_DISABLE_MIUI_OTA_BY_DEFAULT=1  # 默认禁用MIUI OTA功能
@@ -96,15 +96,16 @@ export OF_ALLOW_DISABLE_NAVBAR=0  # 禁止禁用导航栏
 export OF_DEFAULT_TIMEZONE="TAIST-8;TAIDT"  # 设置默认时区为北京时间
 export OF_OPTIONS_LIST_NUM=6  # 安装选项列表最大数量（6个，超出显示滚动条）
 export OF_DEFAULT_KEYMASTER_VERSION=4.1  # 指定默认keymaster版本
-export OF_USE_LZMA_COMPRESSION=1 #ramdisk启动LZMA压缩
- 
+export OF_USE_ZSTD_COMPRESSION=1 #ramdisk启动ZSTD压缩
+export OF_COMPRESSION_TYPE="zstd"
+
 #刷机属性调整（新增适配功能）
  
 export FOX_BUGGED_AOSP_ARB_WORKAROUND="1546300800"  # 规避部分ROM防回滚检测（2019-01-01）
 export OF_QUICK_BACKUP_LIST="/boot;/data;"  # 快速备份默认分区（boot+data）
 export FOX_ENABLE_KERNELSU_SUPPORT=1 #ksu支持
 export FOX_ENABLE_KERNELSU_NEXT_SUPPORT=1 #ksunext支持
- export FOX_ENABLE_SUKISU_SUPPORT=1 #sukisu支持
+export FOX_ENABLE_SUKISU_SUPPORT=1 #sukisu支持
 #特殊处理与工具配置
  
 export FOX_MAINTAINER_PATCH_VERSION=$(date +%y%m%d)  # 维护者补丁版本（按日期生成）

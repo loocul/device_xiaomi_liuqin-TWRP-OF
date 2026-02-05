@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+
 cc_library {
     name: "libgptutils.xiaomi_taro",
     vendor: true,
@@ -27,7 +28,15 @@ cc_library {
         "-Werror",
         "-Wno-unused-parameter",
         "-D_BSG_FRAMEWORK_KERNEL_HEADERS",
+        "-ffunction-sections",
+        "-fdata-sections",
     ],
+    recovery: {
+        strip: {
+            all: true,
+        },
+        ldflags: ["-Wl,--gc-sections"],
+    },
     srcs: [
         "gpt-utils.cpp",
         "recovery-ufs-bsg.cpp",

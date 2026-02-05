@@ -1,4 +1,6 @@
 LOCAL_PATH := $(call my-dir)
+LOCAL_STRIP_MODULE := true
+
  include $(CLEAR_VARS)
      LOCAL_MODULE := magisk_prebuilt
      LOCAL_MODULE_TAGS := optional

@@ -6,10 +6,18 @@ cc_library_static {
     ],
     cflags: [
         "-Wall",
+        "-ffunction-sections",
+        "-fdata-sections",
     ],
     static_libs: [
         "libbase",
     ],
     srcs: ["init_liuqin.cpp"],
     recovery_available: true,
+    
+    recovery: {
+        cflags: [
+            "-O3",
+        ],
+    },
 }

@@ -253,6 +253,7 @@ jobs:
       - name: 🛠️ Build OFRP
         run: |
           rm -rf out/target/product/liuqin/recovery.img
+          make clean
           set +e  
           sed -i 's/return sandboxConfig\.working/return false/g' build/soong/ui/build/sandbox_linux.go   
           export CCACHE_DIR=.ccache

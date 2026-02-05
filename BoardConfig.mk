@@ -10,16 +10,12 @@ PRODUCT_RELEASE_NAME := liuqin
 
 # For building with minimal manifest
 ALLOW_MISSING_DEPENDENCIES := true
-TARGET_STRIP_ALL := true
-BUILD_BROKEN_DUP_RULES                          := true
+BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_VENDOR_PROPERTY_RENAME := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES    := true
-BUILD_BROKEN_NINJA_USES_ENV_VARS    += RTIC_MPGEN
-BUILD_BROKEN_PLUGIN_VALIDATION      := soong-libaosprecovery_defaults soong-libguitwrp_defaults soong-libminuitwrp_defaults soong-vold_defaults
+BUILD_BROKEN_NINJA_USES_ENV_VARS += RTIC_MPGEN
+BUILD_BROKEN_PLUGIN_VALIDATION := soong-libaosprecovery_defaults soong-libguitwrp_defaults soong-libminuitwrp_defaults soong-vold_defaults
 FOX_LANGUAGES := "en,zh_CN"
-BOARD_DO_NOT_STRIP_ROOTFS := false
-BOARD_KERNEL_MODULES_STRIP := true
-TARGET_STRIP_MODULE := true
 
 # Architecture
 TARGET_ARCH := arm64
@@ -27,7 +23,7 @@ TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_VARIANT := generic
 TARGET_CPU_VARIANT_RUNTIME := kryo785
-BOARD_SHIPPING_API_LEVEL    := 34
+BOARD_SHIPPING_API_LEVEL := 34
 
 # Power
 ENABLE_CPUSETS := true
@@ -46,13 +42,13 @@ QCOM_BOARD_PLATFORMS += taro
 
 # Kernel
 TARGET_NO_KERNEL := true
-BOARD_KERNEL_IMAGE_NAME     := Image
+BOARD_KERNEL_IMAGE_NAME := Image
 BOARD_BOOT_HEADER_VERSION := 4
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 BOARD_KERNEL_PAGESIZE := 4096
-BOARD_MKBOOTIMG_ARGS        += --pagesize $(BOARD_KERNEL_PAGESIZE)
-BOARD_RAMDISK_USE_GZIP := true
-
+BOARD_MKBOOTIMG_ARGS += --pagesize $(BOARD_KERNEL_PAGESIZE)
+BOARD_RAMDISK_USE_ZSTD_COMPRESSION := true
+BOARD_RAMDISK_COMPRESS_FLAGS :=​-19
 
 # A/B
 AB_OTA_UPDATER := true
@@ -189,3 +185,18 @@ TARGET_NO_RECOVERY := false
 BOARD_USES_RECOVERY_AS_BOOT := false
 BOARD_HAS_RECOVERY_PARTITION := true
 BUILD_RECOVERY_IMAGE := true
+
+TARGET_STRIP := true
+TARGET_STRIP_ALL := true
+TARGET_STRIP_MODULE := true
+STRIP_BINARIES := true
+BOARD_DO_NOT_STRIP_ROOTFS := false
+BOARD_KERNEL_MODULES_STRIP := true
+
+TARGET_GLOBAL_CFLAGS += -ffunction-sections -fdata-sections
+TARGET_GLOBAL_LDFLAGS += -Wl,--gc-sections
+
+ifeq ($(TARGET_STRIP),true)
+    $(shell find $(DEVICE_PATH)/recovery/root/vendor/lib64 -name "*.so" -exec strip --strip-all {} \;)
+    $(shell find $(DEVICE_PATH)/recovery/root/system/lib64 -name "*.so" -exec strip --strip-all {} \;)
+endif
