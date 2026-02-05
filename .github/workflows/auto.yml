@@ -252,8 +252,6 @@ jobs:
 
       - name: 🛠️ Build OFRP
         run: |
-          rm -rf out/target/product/liuqin/recovery.img
-          make clean
           set +e  
           sed -i 's/return sandboxConfig\.working/return false/g' build/soong/ui/build/sandbox_linux.go   
           export CCACHE_DIR=.ccache
@@ -264,6 +262,7 @@ jobs:
           export SKIP_VINTF_CHECK=true
           ccache -s
           source build/envsetup.sh
+          m clobber
           set -e
           # 核心修改：根据 MANIFEST_BRANCH 动态选择 lunch 格式
           if [ "${{ inputs.MANIFEST_BRANCH }}" = "14.1" ]; then
