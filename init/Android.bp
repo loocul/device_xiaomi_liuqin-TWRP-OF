@@ -6,8 +6,6 @@ cc_library_static {
     ],
     cflags: [
         "-Wall",
-        "-ffunction-sections",
-        "-fdata-sections",
     ],
     static_libs: [
         "libbase",

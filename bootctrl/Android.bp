@@ -23,9 +23,6 @@ cc_library {
         strip: {
             all: true,
         },
-        ldflags: [
-            "-Wl,--gc-sections",
-        ],
     },
 }
 
@@ -39,8 +36,5 @@ cc_library_shared {
         strip: {
             all: true,
         },
-        ldflags: [
-            "-Wl,--gc-sections",
-        ],
     },
 }

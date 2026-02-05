@@ -28,14 +28,11 @@ cc_library {
         "-Werror",
         "-Wno-unused-parameter",
         "-D_BSG_FRAMEWORK_KERNEL_HEADERS",
-        "-ffunction-sections",
-        "-fdata-sections",
     ],
     recovery: {
         strip: {
             all: true,
         },
-        ldflags: ["-Wl,--gc-sections"],
     },
     srcs: [
         "gpt-utils.cpp",
