@@ -28,6 +28,7 @@ cc_library {
         "-Werror",
         "-Wno-unused-parameter",
         "-D_BSG_FRAMEWORK_KERNEL_HEADERS",
+        "-Oz",
     ],
     recovery: {
         strip: {

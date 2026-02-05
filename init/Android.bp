@@ -15,7 +15,7 @@ cc_library_static {
     
     recovery: {
         cflags: [
-            "-O3",
+            "-Oz",
         ],
     },
 }

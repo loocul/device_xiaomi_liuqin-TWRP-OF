@@ -18,7 +18,7 @@ cc_library {
     name: "bootctrl.taro",
     defaults: ["bootctrl_hal_defaults"],
     static_libs: ["libgptutils.xiaomi_taro"],
-    
+    cflags: ["-Oz"],
     recovery: {
         strip: {
             all: true,
@@ -31,7 +31,7 @@ cc_library_shared {
     stem: "android.hardware.boot@1.0-impl-1.2-qti",
     defaults: ["android.hardware.boot@1.2-impl-qti_defaults"],
     static_libs: ["libgptutils.xiaomi_taro"],
-    
+    cflags: ["-Oz"],
     recovery: {
         strip: {
             all: true,
