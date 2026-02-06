@@ -28,11 +28,11 @@ on:
       DEVICE_PATH:
         description: 'Specify your Device Path'
         required: true
-        default: 'device/xiaomi/loocul'
+        default: 'device/xiaomi/liuqin'
       DEVICE_NAME:
         description: 'Specify your Device Codename'
         required: true
-        default: 'loocul'
+        default: 'liuqin'
       BUILD_TARGET:
         description: 'Specify your Build Target'
         required: true
