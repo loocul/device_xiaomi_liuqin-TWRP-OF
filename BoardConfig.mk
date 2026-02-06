@@ -192,8 +192,3 @@ TARGET_STRIP_MODULE := true
 STRIP_BINARIES := true
 BOARD_DO_NOT_STRIP_ROOTFS := false
 BOARD_KERNEL_MODULES_STRIP := true
-
-ifeq ($(TARGET_STRIP),true)
-    $(shell find $(DEVICE_PATH)/recovery/root/vendor/lib64 -name "*.so" -exec strip --strip-all {} \;)
-    $(shell find $(DEVICE_PATH)/recovery/root/system/lib64 -name "*.so" -exec strip --strip-all {} \;)
-endif
