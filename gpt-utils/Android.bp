@@ -30,10 +30,8 @@ cc_library {
         "-D_BSG_FRAMEWORK_KERNEL_HEADERS",
         "-Oz",
     ],
-    recovery: {
-        strip: {
-            all: true,
-        },
+    strip: {
+        all: true,
     },
     srcs: [
         "gpt-utils.cpp",

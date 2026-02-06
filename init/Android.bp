@@ -6,16 +6,11 @@ cc_library_static {
     ],
     cflags: [
         "-Wall",
+        "-Oz",
     ],
     static_libs: [
         "libbase",
     ],
     srcs: ["init_liuqin.cpp"],
     recovery_available: true,
-    
-    recovery: {
-        cflags: [
-            "-Oz",
-        ],
-    },
 }
