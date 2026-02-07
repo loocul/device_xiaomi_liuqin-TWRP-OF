@@ -59,7 +59,7 @@ export FOX_ENABLE_APP_MANAGER=1  # 注释：按需启用橙狐应用管理器（
  
 export OF_TWRP_COMPATIBILITY_MODE=1  # 启用TWRP兼容模式
 export OF_NO_RELOAD_AFTER_DECRYPTION=1  # 解密后不重新加载进程
-#export OF_NO_TREBLE_COMPATIBILITY_CHECK=1  # 禁用Treble兼容性检查
+export OF_NO_TREBLE_COMPATIBILITY_CHECK=1  # 禁用Treble兼容性检查
 export FOX_DELETE_AROMAFM=1  # 删除AromaFM文件管理器（部分设备不兼容）
 export OF_ENABLE_LPTOOLS=1  # 启用逻辑分区工具
 export OF_ENABLE_ALL_PARTITION_TOOLS=1  # 启用所有分区管理工具
@@ -96,8 +96,6 @@ export OF_ALLOW_DISABLE_NAVBAR=0  # 禁止禁用导航栏
 export OF_DEFAULT_TIMEZONE="TAIST-8;TAIDT"  # 设置默认时区为北京时间
 export OF_OPTIONS_LIST_NUM=6  # 安装选项列表最大数量（6个，超出显示滚动条）
 export OF_DEFAULT_KEYMASTER_VERSION=4.1  # 指定默认keymaster版本
-export OF_USE_ZSTD_COMPRESSION=1 #ramdisk启动ZSTD压缩
-export OF_COMPRESSION_TYPE="zstd"
 
 #刷机属性调整（新增适配功能）
  
