@@ -11,4 +11,4 @@ PRODUCT_MAKEFILES := \
 COMMON_LUNCH_CHOICES := \
     twrp_liuqin-user \
     twrp_liuqin-userdebug \
-    twrp_liuqin-eng \
+    twrp_liuqin-eng
