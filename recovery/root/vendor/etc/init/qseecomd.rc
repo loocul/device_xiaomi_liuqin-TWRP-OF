@@ -12,7 +12,3 @@ service vendor.qseecomd /vendor/bin/qseecomd
     group root drmrpc
     disabled
     seclabel u:r:recovery:s0
-    
-on property:vendor.car.hiber=hiberExit
-   stop vendor.qseecomd
-   start vendor.qseecomd

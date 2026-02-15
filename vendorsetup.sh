@@ -12,7 +12,7 @@ export LC_ALL="C"  # 统一字符编码，避免中文乱码
 export ALLOW_MISSING_DEPENDENCIES=true  # 允许缺失非核心依赖（兼容部分库缺失场景）
 export FOX_AB_DEVICE=1  # 标记为A/B分区设备
 export OF_AB_DEVICE_WITH_RECOVERY_PARTITION=1  # A/B设备且存在独立recovery分区
-export OF_USE_LZ4_COMPRESSION=0  # 使用LZ4压缩算法
+#export OF_USE_LZ4_COMPRESSION=1  # 使用LZ4压缩算法
 #export FOX_VANILLA_BUILD=1  # 纯净版构建（不含额外预装组件）
 export OF_NO_MIUI_PATCH_WARNING=1  # 禁用MIUI补丁警告
 #export OF_DISABLE_MIUI_OTA_BY_DEFAULT=1  # 默认禁用MIUI OTA功能
@@ -24,7 +24,7 @@ export TARGET_DEVICE_ALT="liuqin"  # 合并原有+新增兼容设备
 export FOX_VIRTUAL_AB_DEVICE=1  # 标记为虚拟A/B设备
 export OF_DYNAMIC_FULL_SIZE=9126805504  # 动态分区总大小（适配VAB设备）
 #export FOX_VARIANT=""  # 当你想标出这是一个特殊的版本时使用
-#export OF_FORCE_PREBUILT_KERNEL=1  # 强制使用预编译内核
+export OF_FORCE_PREBUILT_KERNEL=1  # 强制使用预编译内核
 export OF_UNBIND_SDCARD_F2FS=1  # 格式化F2FS时解绑SD卡
 export OF_WIPE_METADATA_AFTER_DATAFORMAT=1  # 格式化数据后清除metadata分区
 export OF_FORCE_DATA_FORMAT_F2FS=1  # 强制将数据分区格式化为F2FS
@@ -59,7 +59,7 @@ export FOX_ENABLE_APP_MANAGER=1  # 注释：按需启用橙狐应用管理器（
  
 export OF_TWRP_COMPATIBILITY_MODE=1  # 启用TWRP兼容模式
 export OF_NO_RELOAD_AFTER_DECRYPTION=1  # 解密后不重新加载进程
-export OF_NO_TREBLE_COMPATIBILITY_CHECK=1  # 禁用Treble兼容性检查
+#export OF_NO_TREBLE_COMPATIBILITY_CHECK=1  # 禁用Treble兼容性检查
 export FOX_DELETE_AROMAFM=1  # 删除AromaFM文件管理器（部分设备不兼容）
 export OF_ENABLE_LPTOOLS=1  # 启用逻辑分区工具
 export OF_ENABLE_ALL_PARTITION_TOOLS=1  # 启用所有分区管理工具
@@ -95,21 +95,22 @@ export OF_HIDE_NOTCH=1  # 隐藏刘海屏区域
 export OF_ALLOW_DISABLE_NAVBAR=0  # 禁止禁用导航栏
 export OF_DEFAULT_TIMEZONE="TAIST-8;TAIDT"  # 设置默认时区为北京时间
 export OF_OPTIONS_LIST_NUM=6  # 安装选项列表最大数量（6个，超出显示滚动条）
-export OF_DEFAULT_KEYMASTER_VERSION=4.1  # 指定默认keymaster版本
-
+export OF_DEFAULT_KEYMASTER_VERSION=4.0  # 指定默认keymaster版本
+export OF_USE_LZMA_COMPRESSION=1 #ramdisk启动LZMA压缩
+ 
 #刷机属性调整（新增适配功能）
  
 export FOX_BUGGED_AOSP_ARB_WORKAROUND="1546300800"  # 规避部分ROM防回滚检测（2019-01-01）
 export OF_QUICK_BACKUP_LIST="/boot;/data;"  # 快速备份默认分区（boot+data）
 export FOX_ENABLE_KERNELSU_SUPPORT=1 #ksu支持
 export FOX_ENABLE_KERNELSU_NEXT_SUPPORT=1 #ksunext支持
-export FOX_ENABLE_SUKISU_SUPPORT=1 #sukisu支持
+ export FOX_ENABLE_SUKISU_SUPPORT=1 #sukisu支持
 #特殊处理与工具配置
  
 export FOX_MAINTAINER_PATCH_VERSION=$(date +%y%m%d)  # 维护者补丁版本（按日期生成）
 export OF_MAINTAINER="Nanya"  # 维护者名称
 export FOX_MOVE_MAGISK_INSTALLER_TO_RAMDISK=1  # 将Magisk安装包移至ramdisk
-export OF_SKIP_FBE_DECRYPTION_SDKVERSION=32  # Android 12L及以上跳过FBE解密（避免卡LOGO）
+#export OF_SKIP_FBE_DECRYPTION_SDKVERSION=32  # Android 12L及以上跳过FBE解密（避免卡LOGO）
  
 #启动画面修改（保持原有配置，注释冗余重复项）
  

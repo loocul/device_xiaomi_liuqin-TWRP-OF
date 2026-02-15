@@ -4,10 +4,9 @@
 #
 # 关于橙狐变量详见 fox_12.1/vendor/recovery/orangefox_build_vars.txt 
 
-OF_MAINTAINER := nanya 
+ OF_MAINTAINER := nanya 
  
-#display for pad
-OF_SCREEN_DPI := 704
-OF_DYNAMIC_FULL_SIZE := 9126805504
-
-OF_RECOVERY_AB_FULL_REFLASH_RAMDISK := 1
+ #display for pad
+ 
+ OF_SCREEN_DPI := 704
+ OF_DYNAMIC_FULL_SIZE := 9126805504
