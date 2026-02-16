@@ -198,15 +198,15 @@ jobs:
         export CCACHE_EXEC=/usr/bin/ccache
         sed -i 's/return sandboxConfig\.working/return false/g' build/soong/ui/build/sandbox_linux.go
         fi
+        if sed -i 's/odm_dlkm/odm_dlkm mi_ext/g' build/make/core/config.mk && grep -q "mi_ext" build/make/core/config.mk; then
+          echo "✅ [SUCCESS]: mi_ext has been injected into the whitelist!"
+        else
+          echo "❌ [ERROR]: Failed to patch config.mk. The file might be different than expected."
+          exit 1
+        fi
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
         set -e
-            if sed -i 's/odm_dlkm/odm_dlkm mi_ext/g' build/make/core/config.mk && grep -q "mi_ext" build/make/core/config.mk; then
-              echo "✅ [SUCCESS]: mi_ext has been injected into the whitelist!"
-            else
-              echo "❌ [ERROR]: Failed to patch config.mk. The file might be different than expected."
-              exit 1
-            fi
         if [[ ${{ inputs.MANIFEST_BRANCH }} == '14.1' ]]; then
         lunch twrp_${{ inputs.DEVICE_NAME }}-ap2a-eng && make clean && mka adbd ${{ inputs.BUILD_TARGET }}image
         else
