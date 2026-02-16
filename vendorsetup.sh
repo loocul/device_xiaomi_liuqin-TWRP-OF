@@ -96,7 +96,7 @@ export OF_ALLOW_DISABLE_NAVBAR=0  # 禁止禁用导航栏
 export OF_DEFAULT_TIMEZONE="TAIST-8;TAIDT"  # 设置默认时区为北京时间
 export OF_OPTIONS_LIST_NUM=6  # 安装选项列表最大数量（6个，超出显示滚动条）
 export OF_DEFAULT_KEYMASTER_VERSION=4.0  # 指定默认keymaster版本
-export OF_USE_LZMA_COMPRESSION=1 #ramdisk启动LZMA压缩
+#export OF_USE_LZMA_COMPRESSION=1 #ramdisk启动LZMA压缩
  
 #刷机属性调整（新增适配功能）
  
@@ -104,7 +104,7 @@ export FOX_BUGGED_AOSP_ARB_WORKAROUND="1546300800"  # 规避部分ROM防回滚�
 export OF_QUICK_BACKUP_LIST="/boot;/data;"  # 快速备份默认分区（boot+data）
 export FOX_ENABLE_KERNELSU_SUPPORT=1 #ksu支持
 export FOX_ENABLE_KERNELSU_NEXT_SUPPORT=1 #ksunext支持
- export FOX_ENABLE_SUKISU_SUPPORT=1 #sukisu支持
+export FOX_ENABLE_SUKISU_SUPPORT=1 #sukisu支持
 #特殊处理与工具配置
  
 export FOX_MAINTAINER_PATCH_VERSION=$(date +%y%m%d)  # 维护者补丁版本（按日期生成）
